@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  coin-game-lambda-sam-app
+
+  Sample SAM Template for coin-game-lambda-sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+
+    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    LoggingConfig:
+      LogFormat: JSON
+Resources:
+  SetUserDataFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: set_user_function.set_user_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "coin_game_user_table"
+  GetUserDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: get_user_function.get_user_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "coin_game_user_table"
+  GetDepartmentListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: get_department_list_function.get_department_list_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "coin_game_user_table"
+  SetDeeplearningResultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: set_deeplearning_result_function.set_deeplearning_result_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "upbit_deeplearning_table"
+  GetDeeplearningResultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: get_deeplearning_result_function.get_deeplearning_result_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "upbit_deeplearning_table"
+Outputs:
+  SetUserDataFunction:
+    Description: SetUserData Lambda Function ARN
+    Value: !GetAtt SetUserDataFunction.Arn
+  SetUserDataFunctionIamRole:
+    Description: Implicit IAM Role created for SetUserData function
+    Value: !GetAtt SetUserDataFunctionRole.Arn
+
