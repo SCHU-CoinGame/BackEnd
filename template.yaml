@@ -69,6 +69,17 @@ Resources:
       Environment:
         Variables:
           DYNAMODB_TABLE: "upbit_deeplearning_table"
+  GetTheBestUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: get_the_best_user_function.get_the_best_user_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: "coin_game_user_table"
 Outputs:
   SetUserDataFunction:
     Description: SetUserData Lambda Function ARN
