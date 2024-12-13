@@ -80,6 +80,32 @@ Resources:
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
+  SetClickStreamDataFunction:
+    Type: AWS::Serverless::Function
+    CodeUri: coin_sam_code/
+    Handler: set_click_stream_function.set_click_stream_handler
+    Runtime: python3.12
+    Architectures:
+      - x86_64
+    Policies:
+      - KinesisPutRecordPolicy:
+          StreamName: !Ref ClickStreamKinesisStream
+    Environment:
+      Variables:
+        KINESIS_STREAM_NAME: !Ref ClickStreamKinesisStream
+    Events:
+      ApiGatewayPostEvent:
+        Type: Api
+        Properties:
+          Path: /clickstream
+          Method: post
+ClickStreamKinesisStream:
+  Type: AWS::Kinesis::Stream
+  Name: coin-game-kinesis
+  Properties:
+    ShardCount: 1
+
+    
 Outputs:
   SetUserDataFunction:
     Description: SetUserData Lambda Function ARN
@@ -87,4 +113,7 @@ Outputs:
   SetUserDataFunctionIamRole:
     Description: Implicit IAM Role created for SetUserData function
     Value: !GetAtt SetUserDataFunctionRole.Arn
+  KinesisStreamName:
+    Description: Name of the Kinesis Stream
+    Value: !Ref ClickStreamKinesisStream
 
