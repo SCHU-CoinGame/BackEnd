@@ -5,115 +5,97 @@ Description: >
 
   Sample SAM Template for coin-game-lambda-sam-app
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 10
-
-    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    Runtime: python3.12
+    Architectures:
+      - x86_64
     LoggingConfig:
       LogFormat: JSON
+
 Resources:
   SetUserDataFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: set_user_function.set_user_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
+
   GetUserDataFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: get_user_function.get_user_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
+
   GetDepartmentListFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: get_department_list_function.get_department_list_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
+
   SetDeeplearningResultFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: set_deeplearning_result_function.set_deeplearning_result_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "upbit_deeplearning_table"
+
   GetDeeplearningResultFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: get_deeplearning_result_function.get_deeplearning_result_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "upbit_deeplearning_table"
+
   GetTheBestUserFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
       Handler: get_the_best_user_function.get_the_best_user_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
-  SetClickStreamDataFunction:
-    Type: AWS::Serverless::Function
-    CodeUri: coin_sam_code/
-    Handler: set_click_stream_function.set_click_stream_handler
-    Runtime: python3.12
-    Architectures:
-      - x86_64
-    Policies:
-      - KinesisPutRecordPolicy:
-          StreamName: !Ref ClickStreamKinesisStream
-    Environment:
-      Variables:
-        KINESIS_STREAM_NAME: !Ref ClickStreamKinesisStream
-    Events:
-      ApiGatewayPostEvent:
-        Type: Api
-        Properties:
-          Path: /clickstream
-          Method: post
-ClickStreamKinesisStream:
-  Type: AWS::Kinesis::Stream
-  Name: coin-game-kinesis
-  Properties:
-    ShardCount: 1
 
-    
+  SetClickStreamFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: set_click_stream_function.set_click_stream_handler
+      Environment:
+        Variables:
+          KINESIS_STREAM_NAME: coin-game-kinesis
+
+  KDSFirehoseS3Parquet:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: KDS_Firehose_S3_Parquet.KDS_Firehose_S3_Parquet_handler
+      Environment:
+        Variables:
+          RAW_DATA_BUCKET: "coin-game-raw-data"
+
 Outputs:
   SetUserDataFunction:
-    Description: SetUserData Lambda Function ARN
+    Description: ARN of the SetUserData Lambda Function
     Value: !GetAtt SetUserDataFunction.Arn
+
   SetUserDataFunctionIamRole:
-    Description: Implicit IAM Role created for SetUserData function
+    Description: IAM Role for SetUserDataFunction
     Value: !GetAtt SetUserDataFunctionRole.Arn
+
   KinesisStreamName:
     Description: Name of the Kinesis Stream
-    Value: !Ref ClickStreamKinesisStream
-
+    Value: coin-game-kinesis

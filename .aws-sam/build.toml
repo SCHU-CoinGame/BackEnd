@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "app.lambda_handler"
 manifest_hash = "d883742390d24a6a62bd319e16a756ad"
 packagetype = "Zip"
-functions = ["SetUserDataFunction", "GetUserDataFunction", "GetDepartmentListFunction", "SetDeeplearningResultFunction", "GetDeeplearningResultFunction", "GetTheBestUserFunction"]
+functions = ["SetUserDataFunction", "GetUserDataFunction", "GetDepartmentListFunction", "SetDeeplearningResultFunction", "GetDeeplearningResultFunction", "GetTheBestUserFunction", "SetClickStreamFunction"]
 
 [layer_build_definitions]
