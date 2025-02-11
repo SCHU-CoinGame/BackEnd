@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h2>WebSocket Test</h2>
+    <div>
+        <button id="connectBtn">Connect WebSocket</button>
+        <button id="sendDataBtn">Send Data Request</button>
+        <button id="stopDataBtn">Stop Data Request</button>
+        <button id="closeBtn">Close Connection</button>
+    </div>
+    <div id="output" style="margin-top: 20px;">
+        <h4>Logs:</h4>
+        <pre id="log"></pre>
+    </div>
+
+    <script>
+        let socket; // 웹소켓 객체
+
+        const output = document.getElementById('log'); // 로그 출력 요소
+
+        // 로그 출력 함수
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerText += `[${timestamp}] ${message}\n`;
+        }
+
+        // 1. 웹소켓 연결
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            const wsUrl = "wss://92otppblpb.execute-api.ap-northeast-2.amazonaws.com/production"; // WebSocket URL
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = () => logMessage("WebSocket Connected!");
+            socket.onmessage = (event) => logMessage(`Message Received: ${event.data}`);
+            socket.onerror = (error) => logMessage(`Error: ${error.message}`);
+            socket.onclose = () => logMessage("WebSocket Disconnected!");
+
+            logMessage("Connecting to WebSocket...");
+        });
+
+        // 2. 데이터 요청 전송
+        document.getElementById('sendDataBtn').addEventListener('click', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ action: "getData" }); // Lambda의 getData 처리
+                socket.send(message);
+                logMessage("Sent: Data Request");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+
+        // 3. 데이터 중지 요청 전송
+        document.getElementById('stopDataBtn').addEventListener('click', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ action: "stopData" }); // Lambda의 stopData 처리
+                socket.send(message);
+                logMessage("Sent: Stop Data Request");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+
+        // 4. 연결 종료
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            if (socket) {
+                socket.close();
+                logMessage("WebSocket Closed.");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -23,7 +23,7 @@ def get_deeplearning_result_handler(event, context):
         print("Lambda 함수 시작 - 딥러닝 결과 호출")
         print(f"Received event: {json.dumps(event)}")
 
-        coin_codes = ['KRW-BTC', 'KRW-SXP', 'KRW-SUI', 'KRW-ARK', 'KRW-SHIB', 'KRW-SEI', 'KRW-HIFI', 'KRW-XRP', 'KRW-UXLINK']
+        coin_codes = ['KRW-BTC', 'KRW-ETH', 'KRW-DOGE', 'KRW-BIGTIME', 'KRW-SUI', 'KRW-UXLINK', 'KRW-SOL', 'KRW-XRP', 'KRW-SXP']
 
         results = []
 

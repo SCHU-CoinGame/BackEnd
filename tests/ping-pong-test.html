@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h2>WebSocket Test</h2>
+    <div>
+        <button id="connectBtn">Connect WebSocket</button>
+        <button id="sendDataBtn">Send Data Request</button>
+        <button id="stopDataBtn">Stop Data Request</button>
+        <button id="closeBtn">Close Connection</button>
+    </div>
+    <div id="output" style="margin-top: 20px;">
+        <h4>Logs:</h4>
+        <pre id="log"></pre>
+    </div>
+    <div id="dataOutput" style="margin-top: 20px;">
+        <h4>Data:</h4>
+        <pre id="data"></pre>
+    </div>
+
+    <script>
+        let socket; // WebSocket 객체
+        const logOutput = document.getElementById('log'); // 로그 출력 요소
+        const dataOutput = document.getElementById('data'); // 데이터 출력 요소
+
+        // 로그 출력 함수
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.innerText += `[${timestamp}] ${message}\n`;
+        }
+
+        // 데이터 출력 함수
+        function displayData(data) {
+            dataOutput.innerText = JSON.stringify(data, null, 2); // 데이터 JSON 포맷 출력
+        }
+
+        // 1. WebSocket 연결
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            const wsUrl = "wss://92otppblpb.execute-api.ap-northeast-2.amazonaws.com/production"; // WebSocket URL
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = () => logMessage("WebSocket Connected!");
+            socket.onmessage = (event) => {
+                const receivedData = JSON.parse(event.data);
+
+                if (receivedData.type === 'pong') {
+                    logMessage("Received Pong from server");
+                } else {
+                    logMessage("Received Data from server");
+                    displayData(receivedData); // 받은 데이터를 화면에 출력
+                }
+            };
+            socket.onerror = (error) => logMessage(`Error: ${error.message}`);
+            socket.onclose = () => logMessage("WebSocket Disconnected!");
+
+            logMessage("Connecting to WebSocket...");
+        });
+
+        // 2. 데이터 요청 전송
+        document.getElementById('sendDataBtn').addEventListener('click', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ action: "getData" }); // Lambda의 getData 처리
+                socket.send(message);
+                logMessage("Sent: Data Request");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+
+        // 3. 데이터 중지 요청 전송
+        document.getElementById('stopDataBtn').addEventListener('click', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ action: "stopData" }); // Lambda의 stopData 처리
+                socket.send(message);
+                logMessage("Sent: Stop Data Request");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+
+        // 4. 연결 종료
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            if (socket) {
+                socket.close();
+                logMessage("WebSocket Closed.");
+            } else {
+                logMessage("WebSocket is not connected.");
+            }
+        });
+    </script>
+</body>
+</html>

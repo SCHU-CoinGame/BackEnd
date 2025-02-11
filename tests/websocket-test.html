@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebSocket Test</title>
+</head>
+<body>
+  <h2>WebSocket 테스트</h2>
+  <button id="connect">연결</button>
+  <button id="disconnect">연결 해제</button>
+  <button id="send">데이터 요청</button>
+  <pre id="output"></pre>
+
+  <script>
+    let socket;
+    const output = document.getElementById('output');
+
+    // WebSocket 연결
+    document.getElementById('connect').addEventListener('click', () => {
+      // WebSocket URL (API Gateway WebSocket URL 입력)
+      const url = 'wss://92otppblpb.execute-api.ap-northeast-2.amazonaws.com/production/';
+      
+      // WebSocket 객체 생성
+      socket = new WebSocket(url);
+
+      // 연결 성공
+      socket.onopen = () => {
+        output.textContent += 'WebSocket 연결 성공!\n';
+      };
+
+      // 메시지 수신
+      socket.onmessage = (event) => {
+        output.textContent += `수신 데이터: ${event.data}\n`;
+      };
+
+      // 연결 종료
+      socket.onclose = () => {
+        output.textContent += 'WebSocket 연결 종료\n';
+      };
+
+      // 에러 발생
+      socket.onerror = (error) => {
+        output.textContent += `에러 발생: ${error.message}\n`;
+      };
+    });
+
+    // WebSocket 연결 해제
+    document.getElementById('disconnect').addEventListener('click', () => {
+      if (socket) {
+        socket.close();
+      }
+    });
+
+    // 데이터 요청
+    document.getElementById('send').addEventListener('click', () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        // 서버로 메시지 전송
+        socket.send(JSON.stringify({ action: 'getData' }));  // 'getData'는 Lambda에서 처리되는 액션 이름
+        output.textContent += '데이터 요청 전송 완료\n';
+      } else {
+        output.textContent += 'WebSocket 연결이 없습니다.\n';
+      }
+    });
+  </script>
+</body>
+</html>

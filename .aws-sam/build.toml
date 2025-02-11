@@ -5,8 +5,8 @@ codeuri = "/Users/ilhanyu/coin-game-lambda-sam-app/coin_sam_code"
 runtime = "python3.12"
 architecture = "x86_64"
 handler = "app.lambda_handler"
-manifest_hash = "d883742390d24a6a62bd319e16a756ad"
+manifest_hash = "da7c6a8f82283738cf2f41c413b0616f"
 packagetype = "Zip"
-functions = ["SetUserDataFunction", "GetUserDataFunction", "GetDepartmentListFunction", "SetDeeplearningResultFunction", "GetDeeplearningResultFunction", "GetTheBestUserFunction", "SetClickStreamFunction"]
+functions = ["SetUserDataFunction", "GetUserDataFunction", "GetaffiliationListFunction", "SetDeeplearningResultFunction", "GetDeeplearningResultFunction", "GetTheBestUserFunction", "SetClickStreamFunction", "KDStoS3ParquetFunction", "KDFS3ParquetFunction", "getUserAnalysisFunction", "websocketConnetcionFunction", "websocketDisconnetcionFunction", "websocketDefaultFunction"]
 
 [layer_build_definitions]

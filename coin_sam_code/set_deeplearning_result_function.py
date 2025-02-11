@@ -37,6 +37,9 @@ def set_deeplearning_result_handler(event, context):
             largest_spike = item.get('largest_spike')
             fastest_growth = item.get('fastest_growth')
             fastest_decline = item.get('fastest_decline')
+            sell_up = Decimal(str(item.get('sell_up')))
+            sell_down = Decimal(str(item.get('sell_down')))
+            
 
             response = table.put_item(
                 Item={
@@ -49,7 +52,9 @@ def set_deeplearning_result_handler(event, context):
                     'largest_rise': largest_rise,
                     'fastest_growth': fastest_growth,
                     'largest_spike': largest_spike,
-                    'fastest_decline': fastest_decline
+                    'fastest_decline': fastest_decline,
+                    'sell_up': sell_up,
+                    'sell_down': sell_down
                 }
             )
             print(f"DynamoDB에 데이터 저장 성공: {response}")

@@ -34,22 +34,17 @@ def set_user_handler(event, context):
         except InvalidOperation as e:
             raise ValueError(f"Invalid 'balance' value: {balance}, error: {e}")
         
-        student_id = body.get('student_id')
-        department = body.get('department')
+        affiliation = body.get('affiliation')
         nickname = body.get('nickname')
         coin_1 = body.get('coin_1')
         coin_2 = body.get('coin_2')
         coin_3 = body.get('coin_3')
 
-        print(f"Extracted data - student_id: {student_id}, department: {department}, nickname: {nickname}, "
-              f"coin_1: {coin_1}, coin_2: {coin_2}, coin_3: {coin_3}")
-
         response = table.put_item(
             Item={
                 'name': name, 
                 'balance': balance_decimal,
-                'student_id': student_id,
-                'department': department,
+                'affiliation': affiliation,
                 'nickname': nickname,
                 'coin_1': coin_1,
                 'coin_2': coin_2,

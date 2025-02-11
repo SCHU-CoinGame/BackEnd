@@ -33,11 +33,11 @@ Resources:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
 
-  GetDepartmentListFunction:
+  GetaffiliationListFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
-      Handler: get_department_list_function.get_department_list_handler
+      Handler: get_affiliation_list_function.get_affiliation_list_handler
       Environment:
         Variables:
           DYNAMODB_TABLE: "coin_game_user_table"
@@ -76,16 +76,62 @@ Resources:
       Handler: set_click_stream_function.set_click_stream_handler
       Environment:
         Variables:
-          KINESIS_STREAM_NAME: coin-game-kinesis
-
-  KDSFirehoseS3Parquet:
+          KINESIS_STREAM_NAME: "coin-game-kinesis"
+          FIREHOSE_STREAM_NAME: "ClickStream-PUT-S3"
+  
+  KDStoS3ParquetFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: coin_sam_code/
-      Handler: KDS_Firehose_S3_Parquet.KDS_Firehose_S3_Parquet_handler
+      Handler: KDS_to_S3_parquet_function.KDS_to_S3_parquet_handler
       Environment:
         Variables:
-          RAW_DATA_BUCKET: "coin-game-raw-data"
+          RAW_DATA_BUCKET: "aws-s3-bucket-fastcampus"
+          RAW_DATA_PREFIX: "ClickStream/raw-data/"
+
+  KDFS3ParquetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: KDF_S3_parquet_function.KDF_S3_parquet_handler
+
+  getUserAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: get_user_analysis_function.get_user_analysis_handler
+      Environment:
+        Variables:
+          BUCKET_NAME: "aws-s3-bucket-fastcampus"
+          PREFIX: "ClickStream/analytics_results/"
+
+  websocketConnetcionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: websocket_connection_function.websocket_connection_handler
+      Environment:
+        Variables:
+          CONNECTIONS_TABLE: websocket_connections
+
+  websocketDisconnetcionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: websocket_disconnection_function.websocket_disconnection_handler
+      Environment:
+        Variables:
+          CONNECTIONS_TABLE: websocket_connections
+
+  websocketDefaultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: coin_sam_code/
+      Handler: websocket_default_function.websocket_default_handler
+      Environment:
+        Variables:
+          DATA_TABLE: dynamoDB_upbit_table
+          CONNECTIONS_TABLE: websocket_connections
 
 Outputs:
   SetUserDataFunction:

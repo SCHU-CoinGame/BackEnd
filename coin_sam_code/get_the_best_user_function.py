@@ -34,9 +34,8 @@ def get_the_best_user_handler(event, context):
 
 
         for item in items:
-            item['student_id'] = str(item['student_id'])
             item['name'] = str(item['name'])
-            item['department'] = str(item['department'])
+            item['affiliation'] = str(item['affiliation'])
             item['nickname'] = str(item['nickname'])
             item['coin_1'] = str(item['coin_1'])
             item['coin_2'] = str(item['coin_2'])
