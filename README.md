@@ -4,20 +4,19 @@
 
 ## 📌 Project Overview
 
-The backend architecture is designed for real-time data processing, user interactions, and deep learning analysis. The system integrates **Kafka, AWS Lambda, DynamoDB, S3, and Spark Streaming** for efficient data handling.
+The backend architecture is designed for real-time data processing, user interactions, and deep learning analysis. The system integrates **Kafka, AWS Lambda, DynamoDB, S3, and Spark** for efficient data handling.
 
 ## 🛠️ Tech Stack
 
 - **Data Collection & Processing**
   - Upbit WebSocket API
   - Apache Kafka (Producer & Consumer)
-  - Spark Streaming
+  - AWS DynamoDB
   - AWS S3 (Data Lake)
   
 - **Backend Services**
   - AWS Lambda (Serverless execution)
   - AWS API Gateway (API Management)
-  - AWS DynamoDB (Real-time NoSQL storage)
   
 - **Deep Learning & Analytics**
   - LSTM-based Prediction Model
